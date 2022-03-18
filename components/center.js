@@ -1,4 +1,4 @@
-import { ChevronDownIcon, LogoutIcon } from "@heroicons/react/outline";
+import {  LogoutIcon } from "@heroicons/react/outline";
 import { signOut, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { shuffle } from "lodash";
