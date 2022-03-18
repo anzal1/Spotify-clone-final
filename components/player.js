@@ -13,7 +13,8 @@ import {
 } from "@heroicons/react/solid";
 import { debounce } from "lodash";
 import { useSession } from "next-auth/react";
-import { useState, useEffect,useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { toast } from "react-toastify";
 import { useRecoilState } from "recoil";
 import { currentTrackIdState, isPlayingState } from "../atoms/songAtom";
 import useSongInfo from "../hooks/useSongInfo";
@@ -41,16 +42,40 @@ function Player() {
     }
   };
 
-  const handlePlayPause = () => {
-    spotifyApi.getMyCurrentPlaybackState().then((data) => {
-      if (data.body?.is_playing) {
-        spotifyApi.pause();
-        setIsPlaying(false);
-      } else {
-        spotifyApi.play();
-        setIsPlaying(true);
+  const notify = () =>
+    toast(
+      "Inactive session present ,first open spotify in any of the environment to make it active !",
+      {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
       }
-    });
+    );
+
+  const handlePlayPause = () => {
+    spotifyApi
+      .getMyCurrentPlaybackState()
+      .then((data) => {
+        if (data.body?.is_playing) {
+          spotifyApi.pause().catch(() => {
+            notify();
+          });
+          setIsPlaying(false);
+        } else {
+          spotifyApi.play().catch(() => {
+            notify();
+          });
+          setIsPlaying(true);
+        }
+      })
+      .catch(() => {
+        notify();
+      });
   };
 
   useEffect(() => {
@@ -67,18 +92,19 @@ function Player() {
     }
   }, [volume]);
 
-    const debouncedAdjustVolume = useCallback(
-        debounce((volume)=>{
-            spotifyApi.setVolume(volume).catch((err) => {});
-        },500),
-        []
-    );
+  const debouncedAdjustVolume = useCallback(
+    debounce((volume) => {
+      spotifyApi.setVolume(volume).catch((err) => {});
+    }, 500),
+    []
+  );
 
   return (
     <div
       className="h-24 bg-gradient-to-b from-black
      to-gray-900 text-white grid grid-cols-3 text-xs md:text-base px-2 md:px-8
-      ">
+      "
+    >
       {/* {left hand side} */}
       <div className="flex items-center space-x-4 p-2">
         <img

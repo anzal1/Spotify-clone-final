@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import { useRecoilState } from "recoil";
 import { currentTrackIdState, isPlayingState } from "../atoms/songAtom";
 import useSpotify from "../hooks/useSpotify";
@@ -9,13 +10,30 @@ function Song({ order, track }) {
     useRecoilState(currentTrackIdState);
   const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState);
 
+  const notify = () =>
+    toast(
+      "Inactive session present ,first open spotify in any of the environment to make it active !",
+      {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      }
+    );
+
+
+
   const playSong = () => {
     setCurrentTrackId(track.track.id);
     setIsPlaying(true);
     spotifyApi.play({
         uris:[track.track.uri],
        
-  });
+  }).catch(()=>notify());
 }
   return (
     <div

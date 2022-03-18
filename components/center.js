@@ -7,6 +7,7 @@ import { playlistState, playlistIdState } from "../atoms/paylistatom";
 import spotifyApi from "../lib/spotify";
 import useSpotify from "../hooks/useSpotify";
 import Songs from "./songs";
+import { toast } from "react-toastify";
 const colors = [
   "from-indigo-500",
   "from-purple-500",
@@ -20,6 +21,20 @@ const colors = [
   "from-gray-500",
 ];
 
+const notify = () =>
+  toast("Logging out! Please wait...", {
+    position: "top-center",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: false,
+    draggable: true,
+    progress: undefined,
+    isLoading: true,
+    theme: "dark",
+    type: "success",
+  });
+
 function Center() {
   const { data: session } = useSession();
   const spotify = useSpotify();
@@ -30,7 +45,6 @@ function Center() {
   useEffect(() => {
     setColor(shuffle(colors).pop());
   }, [playlistId]);
-  
 
   useEffect(() => {
     spotify
@@ -48,8 +62,13 @@ function Center() {
   return (
     <div className="flex-grow h-screen overflow-y-scroll scrollbar-hide">
       <header className="absolute top-5 right-8">
-        <div className="flex items-center bg-black space-x-3 opacity-90 hover:opacity-80 cursor-pointer rounded-full p-1 pr-2 text-white"
-        onClick={signOut}>
+        <div
+          className="flex items-center bg-black space-x-3 opacity-90 hover:opacity-80 cursor-pointer rounded-full p-1 pr-2 text-white"
+          onClick={() => {
+            notify();
+            signOut();
+          }}
+        >
           <img
             className="rounded-full w-10 h-10"
             src={session?.user.image}

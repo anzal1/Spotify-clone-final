@@ -11,7 +11,7 @@ function useSongInfo() {
 
   useEffect(() => {
     const fetchSongInfo = async () => {
-      if (currentIdTrack!==null) {
+      if (currentIdTrack) {
         const trackInfo = await fetch(
           `https://api.spotify.com/v1/tracks/${currentIdTrack}`,
           {
@@ -19,7 +19,7 @@ function useSongInfo() {
               Authorization: `Bearer ${spotifyApi.getAccessToken()}`,
             }
           }
-        ).then((res) => res.json());
+        ).then((res) => res.json()).catch(console.error);
         setSongInfo(trackInfo);
       }
     };
