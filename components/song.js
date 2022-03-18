@@ -12,7 +12,7 @@ function Song({ order, track }) {
 
   const notify = () =>
     toast(
-      "Inactive session present ,first open spotify in any of the environment to make it active !",
+      "Inactive session present ,please open spotify and reload the page!",
       {
         position: "top-center",
         autoClose: 5000,
@@ -33,7 +33,9 @@ function Song({ order, track }) {
     spotifyApi.play({
         uris:[track.track.uri],
        
-  }).catch(()=>notify());
+  }).catch(()=>{
+    setIsPlaying(false);
+    notify()});
 }
   return (
     <div

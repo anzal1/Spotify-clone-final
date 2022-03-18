@@ -44,7 +44,7 @@ function Player() {
 
   const notify = () =>
     toast(
-      "Inactive session present ,first open spotify in any of the environment to make it active !",
+      "Inactive session present ,please open spotify and reload the page!",
       {
         position: "top-center",
         autoClose: 5000,
@@ -68,6 +68,7 @@ function Player() {
           setIsPlaying(false);
         } else {
           spotifyApi.play().catch(() => {
+            setIsPlaying(false);
             notify();
           });
           setIsPlaying(true);

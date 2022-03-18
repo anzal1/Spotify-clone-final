@@ -74,7 +74,7 @@ function Center() {
             src={session?.user.image}
             alt=""
           />
-          <h2>{session?.user.name}</h2>
+          <h2 className="hidden md:inline">{session?.user.name}</h2>
           <LogoutIcon className="h-5 w-5" />
         </div>
       </header>
