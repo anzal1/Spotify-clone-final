@@ -9,7 +9,7 @@ export async function middleware(req) {
 
   const { pathname } = req.nextUrl;
 
-  if (pathname?.includes("/api/auth") || token) {
+  if (pathname.includes("/api/auth") || token) {
     return NextResponse.next();
   }
 
